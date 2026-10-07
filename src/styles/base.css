@@ -1,0 +1,118 @@
+/* Βάση: reset, τυπογραφία, κουμπιά, κοινές κλάσεις, animations εμφάνισης. */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+[hidden] { display: none !important; }
+img { max-width: 100%; height: auto; display: block; }
+p { margin: 0; }
+a { color: inherit; }
+ul, ol { margin: 0; padding: 0; }
+
+h1, h2, h3 { margin: 0; color: inherit; text-wrap: balance; }
+h1, h2 { font-family: var(--font-display); font-weight: 400; }
+h1 { font-size: var(--step-3); line-height: 1.04; letter-spacing: -0.015em; }
+h2 { font-size: var(--step-2); line-height: 1.12; letter-spacing: -0.01em; }
+h3 { font-family: var(--font-body); font-size: var(--step-1); line-height: 1.3; font-weight: 700; letter-spacing: -0.01em; }
+h1 em, h2 em { font-style: italic; font-weight: 400; }
+
+.nums { font-variant-numeric: tabular-nums; }
+
+:focus-visible { outline: 2.5px solid var(--brand); outline-offset: 3px; border-radius: 8px; }
+
+section[id] { scroll-margin-top: 5.5rem; }
+
+.wrap { max-width: 76rem; margin-inline: auto; padding-inline: var(--gutter); }
+
+.section { padding-block: clamp(4.5rem, 10vw, 7.5rem); }
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font: 750 0.74rem/1.4 var(--font-body);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--brand);
+}
+.eyebrow::before { content: ""; width: 1.6rem; height: 2px; border-radius: 2px; background: var(--apricot); }
+
+.skip {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  z-index: 100;
+  padding: 0.75rem 1rem;
+  background: var(--surface);
+  color: var(--ink);
+  border-radius: 10px;
+}
+.skip:focus { left: 16px; top: 16px; }
+
+/* Κουμπιά */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 3.1rem;
+  padding: 0.8rem 1.5rem;
+  border-radius: 999px;
+  border: 1.5px solid transparent;
+  font: 700 0.98rem/1.2 var(--font-body);
+  letter-spacing: -0.005em;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: translate .3s var(--ease), box-shadow .3s var(--ease), background-color .2s, border-color .2s, color .2s;
+}
+.btn svg { width: 1.1rem; height: 1.1rem; flex: none; transition: translate .3s var(--ease); }
+.btn:hover { translate: 0 -2px; }
+.btn:hover svg { translate: 4px 0; }
+.btn:active { translate: 0 0; }
+
+.btn-primary { background: var(--brand); color: var(--on-brand); box-shadow: 0 12px 26px -14px var(--brand); }
+.btn-primary:hover { background: var(--brand-hover); }
+.btn-apricot { background: var(--apricot); color: var(--on-apricot); box-shadow: 0 14px 30px -14px var(--apricot); }
+.btn-apricot:hover { background: var(--apricot-hover); }
+.btn-ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+.btn-ghost:hover { border-color: var(--brand); color: var(--brand); }
+.btn-on-deep { background: transparent; color: var(--on-deep); border-color: var(--deep-line); }
+.btn-on-deep:hover { border-color: var(--on-deep); }
+.btn-sm { min-height: 2.6rem; padding: 0.5rem 1.15rem; font-size: 0.92rem; }
+.btn-block { width: 100%; }
+
+/* Εμφάνιση στο scroll: το περιεχόμενο μένει πάντα ορατό, η κίνηση προσθέτει μόνο «ανύψωση». */
+.motion .reveal:not(.in) { translate: 0 36px; }
+.motion .reveal.in { animation: lift .9s var(--ease) backwards; animation-delay: calc(var(--i, 0) * 90ms); }
+
+@keyframes lift { from { translate: 0 36px; } }
+@keyframes rise { from { opacity: 0; translate: 0 24px; } }
+@keyframes float { 50% { translate: 0 -10px; } }
+@keyframes spin { to { rotate: 360deg; } }
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--mint) 70%, transparent); }
+  70%, 100% { box-shadow: 0 0 0 10px transparent; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* Χώρος για τη σταθερή μπάρα κράτησης στο κινητό */
+@media (max-width: 760px) {
+  body { padding-bottom: 5rem; }
+}

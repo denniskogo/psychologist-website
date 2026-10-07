@@ -1,0 +1,43 @@
+---
+import Icon from './Icon.astro';
+---
+<div class="mcta" id="mcta" aria-hidden="true">
+  <a class="btn btn-apricot btn-block" href="#rantevou" data-pick="intro" tabindex="-1">Κλείστε ραντεβού <Icon name="arrow" /></a>
+</div>
+
+<style>
+  .mcta {
+    display: none;
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 35;
+    padding: 0.75rem 16px calc(0.75rem + env(safe-area-inset-bottom, 0px));
+    background: color-mix(in srgb, var(--surface) 92%, transparent);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 -12px 30px -22px var(--shadow);
+    translate: 0 110%;
+    transition: translate .45s var(--ease);
+  }
+  .mcta.show { translate: 0 0; }
+  @media (max-width: 760px) { .mcta { display: block; } }
+</style>
+
+<script>
+  const bar = document.getElementById('mcta');
+  const link = bar?.querySelector('a');
+  const hero = document.querySelector('.hero-section');
+  const booking = document.getElementById('rantevou');
+  if (bar && link && hero && booking && 'IntersectionObserver' in window) {
+    let heroVisible = true;
+    let bookingVisible = false;
+    const update = () => {
+      const show = !heroVisible && !bookingVisible;
+      bar.classList.toggle('show', show);
+      bar.setAttribute('aria-hidden', String(!show));
+      link.tabIndex = show ? 0 : -1;
+    };
+    new IntersectionObserver(([e]) => { heroVisible = e.isIntersecting; update(); }, { rootMargin: '-120px 0px 0px 0px' }).observe(hero);
+    new IntersectionObserver(([e]) => { bookingVisible = e.isIntersecting; update(); }, { rootMargin: '0px 0px -30% 0px' }).observe(booking);
+  }
+</script>

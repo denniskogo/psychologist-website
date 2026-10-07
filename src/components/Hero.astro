@@ -1,0 +1,188 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import portrait from '../assets/portrait.jpg';
+import { practice } from '../data/site';
+
+const plain = 'Ας μιλήσουμε για'.split(' ');
+const accent = 'ό,τι σας απασχολεί.'.split(' ');
+let i = 0;
+---
+<section class="hero-section" aria-labelledby="hero-title">
+  <div class="wrap">
+    <div class="hero">
+      <div class="glow" aria-hidden="true"></div>
+
+      <div class="text">
+        <p class="badge">
+          {practice.acceptingClients && <span class="live" aria-hidden="true"></span>}
+          Ψυχολόγος {practice.cityIn}{practice.offersOnline && ' και online'}
+        </p>
+        <h1 id="hero-title">
+          {plain.map((w) => (<><span class="w"><span style={`--i:${i++}`}>{w}</span></span>{' '}</>))}
+          <em>{accent.map((w) => (<><span class="w"><span style={`--i:${i++}`}>{w}</span></span>{' '}</>))}</em>
+        </h1>
+        <p class="lede">Είμαι η {practice.name}, ψυχολόγος με μεταπτυχιακό στην Κλινική Ψυχική Υγεία από το ΑΠΘ. Δουλεύω με ενήλικες, στο γραφείο {practice.cityIn}{practice.offersOnline && ' και online'}.</p>
+        <div class="cta-block">
+          <div class="actions">
+            <a class="btn btn-apricot" href="#rantevou" data-pick="intro">Κλείστε ραντεβού <Icon name="arrow" /></a>
+            <a class="btn btn-on-deep" href="#proseggisi">Πώς δουλεύω</a>
+          </div>
+          <p class="micro"><Icon name="clock" />Ξεκινάμε με ένα τηλεφώνημα 15 λεπτών, χωρίς δέσμευση</p>
+        </div>
+        <ul class="trust">
+          <li><Icon name="check" />MSc Κλινική Ψυχική Υγεία, ΑΠΘ</li>
+          <li><Icon name="check" />Αποφοίτηση με Άριστα</li>
+          <li><Icon name="check" />{practice.offersOnline ? 'Γραφείο και online' : `Γραφείο ${practice.cityIn}`}</li>
+        </ul>
+      </div>
+
+      <div class="visual">
+        <div class="arch">
+          <span class="aura a1" aria-hidden="true"></span><span class="aura a2" aria-hidden="true"></span>
+          <Image
+            class="photo"
+            src={portrait}
+            alt={`${practice.name}, ψυχολόγος`}
+            widths={[360, 540, 720]}
+            sizes="(max-width: 900px) 19rem, 25rem"
+            loading="eager"
+            fetchpriority="high"
+          />
+        </div>
+
+        <div class="card info">
+          <span class="info-icon"><Icon name="phone" /></span>
+          <span class="info-text"><strong>15′ γνωριμία</strong><span>Στο τηλέφωνο</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero-section { padding-top: clamp(0.5rem, 2vw, 1.25rem); }
+
+  .hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    gap: clamp(2.5rem, 5vw, 4.5rem);
+    align-items: center;
+    padding: clamp(2.25rem, 6vw, 5rem);
+    border-radius: var(--radius-l);
+    background: var(--deep);
+    color: var(--on-deep);
+  }
+
+  .glow { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+  .glow::before, .glow::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(10px);
+  }
+  .glow::before {
+    width: 46rem; height: 46rem; right: -16rem; top: -22rem;
+    background: radial-gradient(circle, color-mix(in srgb, var(--brand) 75%, transparent) 0, transparent 65%);
+    animation: drift-a 16s ease-in-out infinite alternate;
+  }
+  .glow::after {
+    width: 34rem; height: 34rem; left: -12rem; bottom: -22rem;
+    background: radial-gradient(circle, color-mix(in srgb, var(--apricot) 32%, transparent) 0, transparent 65%);
+    animation: drift-b 20s ease-in-out infinite alternate;
+  }
+  @keyframes drift-a { to { translate: -8rem 6rem; } }
+  @keyframes drift-b { to { translate: 10rem -4rem; } }
+
+  .text { display: flex; flex-direction: column; align-items: flex-start; gap: 1.6rem; min-width: 0; }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 0.65rem;
+    padding: 0.45rem 1rem 0.45rem 0.8rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid var(--deep-line);
+    font-size: 0.86rem; font-weight: 600; color: var(--on-deep);
+    animation: rise .8s var(--ease) both;
+  }
+  .live { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--mint); animation: pulse-ring 2.4s ease-out infinite; }
+
+  h1 { color: var(--on-deep); max-width: 12ch; }
+  h1 em { color: var(--apricot); }
+  .w { display: inline-block; overflow: hidden; vertical-align: top; padding: 0.12em 0.04em 0.16em; margin: -0.12em -0.04em -0.16em; }
+  .w > span { display: inline-block; animation: word-up 1s var(--ease) both; animation-delay: calc(var(--i) * 75ms + 150ms); }
+  @keyframes word-up { from { transform: translateY(110%); } }
+
+  .lede { max-width: 33rem; font-size: 1.12rem; color: var(--on-deep-soft); animation: rise .9s .55s var(--ease) both; }
+  .cta-block { display: flex; flex-direction: column; gap: 0.8rem; animation: rise .9s .7s var(--ease) both; }
+  .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .micro { display: inline-flex; align-items: center; gap: 0.45rem; font-size: 0.86rem; color: var(--on-deep-soft); }
+  .micro :global(svg) { width: 1rem; height: 1rem; color: var(--mint); }
+
+  .trust {
+    list-style: none;
+    display: flex; flex-wrap: wrap; gap: 0.6rem 1.4rem;
+    padding-top: 1.4rem;
+    border-top: 1px solid var(--deep-line);
+    font-size: 0.88rem; font-weight: 600; color: var(--on-deep-soft);
+    animation: rise .9s .85s var(--ease) both;
+  }
+  .trust li { display: inline-flex; align-items: center; gap: 0.45rem; }
+  .trust :global(svg) { width: 1rem; height: 1rem; color: var(--mint); }
+
+  .visual { position: relative; justify-self: center; width: min(100%, 25rem); padding: 1.5rem 0; animation: rise 1s .3s var(--ease) both; }
+
+  .arch {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 4 / 5;
+    max-width: 100%;
+    border-radius: 999px 999px var(--radius-m) var(--radius-m);
+    background: linear-gradient(165deg, var(--deep-2), var(--brand));
+    box-shadow: 0 40px 70px -40px rgba(0, 0, 0, .55), inset 0 0 0 1px var(--deep-line);
+  }
+  .aura { position: absolute; border-radius: 50%; filter: blur(34px); opacity: .85; }
+  .a1 { width: 70%; height: 55%; left: -10%; top: 8%; background: var(--mint); opacity: .55; animation: orbit-1 14s ease-in-out infinite alternate; }
+  .a2 { width: 65%; height: 50%; right: -15%; bottom: 4%; background: var(--apricot); opacity: .7; animation: orbit-2 17s ease-in-out infinite alternate; }
+  @keyframes orbit-1 { to { translate: 35% 30%; scale: 1.15; } }
+  @keyframes orbit-2 { to { translate: -40% -35%; scale: .9; } }
+  .arch :global(.photo) {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: 50% 30%;
+    animation: photo-in 1.4s .35s var(--ease) both;
+  }
+  @keyframes photo-in { from { opacity: 0; scale: 1.06; } }
+
+  .card {
+    position: absolute;
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.7rem 1rem 0.7rem 0.75rem;
+    border-radius: 18px;
+    background: var(--surface);
+    color: var(--ink);
+    box-shadow: 0 22px 40px -22px rgba(0, 0, 0, .5);
+    white-space: nowrap;
+    animation: float 6s ease-in-out infinite;
+  }
+  .info { right: -1.5rem; bottom: 0.5rem; }
+
+  .info-icon { width: 2.6rem; height: 2.6rem; border-radius: 50%; display: grid; place-items: center; background: var(--apricot-soft); color: var(--apricot-hover); }
+  .info-icon :global(svg) { width: 1.2rem; height: 1.2rem; }
+  .info-text { display: flex; flex-direction: column; line-height: 1.25; font-size: 0.85rem; color: var(--ink-soft); }
+  .info-text strong { font-size: 0.95rem; color: var(--ink); }
+
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; }
+    .visual { width: min(100%, 19rem); }
+  }
+  @media (max-width: 480px) {
+    .info { right: -0.5rem; }
+    .trust { gap: 0.5rem 1rem; }
+  }
+
+</style>

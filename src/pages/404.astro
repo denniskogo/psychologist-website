@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { practice } from '../data/site';
+---
+<BaseLayout title={`Η σελίδα δεν βρέθηκε | ${practice.name}`} description="Η σελίδα που ψάχνετε δεν υπάρχει." noindex>
+  <section class="wrap nf">
+    <p class="eyebrow">Σφάλμα 404</p>
+    <h1>Αυτή η σελίδα <em>δεν υπάρχει.</em></h1>
+    <p>Ίσως άλλαξε διεύθυνση ή πληκτρολογήθηκε λάθος.</p>
+    <div class="actions">
+      <a class="btn btn-primary" href="/">Αρχική σελίδα <Icon name="arrow" /></a>
+      <a class="btn btn-ghost" href="/#rantevou">Κλείστε ραντεβού</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .nf { padding-block: clamp(4rem, 12vw, 8rem); display: flex; flex-direction: column; align-items: flex-start; gap: 1.25rem; }
+  h1 em { color: var(--brand); }
+  p:not(.eyebrow) { color: var(--ink-soft); }
+  .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+</style>

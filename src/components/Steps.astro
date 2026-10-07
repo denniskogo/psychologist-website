@@ -1,0 +1,58 @@
+---
+import SectionHead from './SectionHead.astro';
+import { steps } from '../data/site';
+---
+<section class="section" id="ksekiname" aria-labelledby="steps-title">
+  <div class="wrap">
+    <SectionHead
+      id="steps-title"
+      eyebrow="Πώς ξεκινάμε"
+      title="Από το τηλεφώνημα <em>στην πρώτη συνεδρία</em>"
+    />
+    <ol class="steps watch" data-stagger>
+      {steps.map((s, i) => (
+        <li class="step">
+          <span class="num">{i + 1}</span>
+          <h3>{s.title}</h3>
+          <p>{s.text}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .steps { list-style: none; position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2.5rem; }
+  .steps::before {
+    content: "";
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    right: calc((100% - 5rem) / 3);
+    border-top: 2px dashed color-mix(in srgb, var(--brand) 45%, transparent);
+    transform-origin: 0 50%;
+    transition: scale 1.6s .2s cubic-bezier(.6, .1, .2, 1);
+  }
+  :global(.motion) .steps:not(.in)::before { scale: 0 1; }
+
+  .step { position: relative; display: flex; flex-direction: column; gap: 0.75rem; min-width: 0; }
+  .num {
+    width: 4rem; height: 4rem;
+    display: grid; place-items: center;
+    border-radius: 50%;
+    background: var(--deep); color: var(--apricot);
+    font: italic 400 1.9rem/1 var(--font-display);
+    box-shadow: 0 0 0 8px var(--bg);
+    margin-bottom: 0.5rem;
+  }
+  h3 { font-size: 1.15rem; }
+  p { color: var(--ink-soft); font-size: 0.98rem; line-height: 1.6; max-width: 22rem; }
+
+  @media (max-width: 760px) {
+    .steps { grid-template-columns: 1fr; gap: 2rem; }
+    .steps::before { top: 2rem; bottom: 2rem; left: 2rem; right: auto; border-top: 0; border-left: 2px dashed color-mix(in srgb, var(--brand) 45%, transparent); transform-origin: 50% 0; }
+    :global(.motion) .steps:not(.in)::before { scale: 1 0; }
+    .step { padding-left: 5.5rem; }
+    .num { position: absolute; left: 0; top: -0.5rem; }
+  }
+</style>

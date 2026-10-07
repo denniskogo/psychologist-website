@@ -1,0 +1,70 @@
+---
+// Γραμματοσειρές από το δικό μας server (όχι από Google), για συμμόρφωση με GDPR.
+import '@fontsource-variable/manrope';
+import '@fontsource-variable/noto-serif-display/wght.css';
+import '@fontsource-variable/noto-serif-display/wght-italic.css';
+import '../styles/tokens.css';
+import '../styles/base.css';
+import { PUBLIC_PLAUSIBLE_DOMAIN, PUBLIC_GOOGLE_SITE_VERIFICATION } from 'astro:env/client';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { practice } from '../data/site';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Εικόνα για Facebook, Viber, WhatsApp κ.λπ. (1200×630) */
+  image?: string;
+  /** JSON-LD (schema.org) */
+  schema?: Record<string, unknown>[];
+  noindex?: boolean;
+}
+const { title, description, image = '/og.jpg', schema = [], noindex = false } = Astro.props;
+const site = Astro.site ?? new URL('https://www.example.gr');
+const canonical = new URL(Astro.url.pathname, site).href;
+const ogImage = new URL(image, site).href;
+const jsonLd = schema.length ? JSON.stringify({ '@context': 'https://schema.org', '@graph': schema }) : null;
+---
+<!doctype html>
+<html lang="el">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {(noindex || practice.draft) && <meta name="robots" content="noindex" />}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="el_GR" />
+    <meta property="og:site_name" content={`${practice.name}, Ψυχολόγος`} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#073F3D" />
+    {PUBLIC_GOOGLE_SITE_VERIFICATION && <meta name="google-site-verification" content={PUBLIC_GOOGLE_SITE_VERIFICATION} />}
+
+    {jsonLd && <script type="application/ld+json" set:html={jsonLd} />}
+
+    {/* Στατιστικά χωρίς cookies: ενεργοποιείται μόνο αν οριστεί PUBLIC_PLAUSIBLE_DOMAIN */}
+    {PUBLIC_PLAUSIBLE_DOMAIN && <script is:inline defer data-domain={PUBLIC_PLAUSIBLE_DOMAIN} src="https://plausible.io/js/script.js"></script>}
+  </head>
+  <body>
+    <a class="skip" href="#main">Μετάβαση στο περιεχόμενο</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <script>
+      import '../scripts/motion';
+    </script>
+  </body>
+</html>

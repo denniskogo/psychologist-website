@@ -1,0 +1,73 @@
+---
+import Icon from './Icon.astro';
+import SectionHead from './SectionHead.astro';
+import { topicList } from '../data/topics';
+
+interface Props {
+  /** Για τη σελίδα θέματος: κρύβει το τρέχον θέμα από τη λίστα */
+  exclude?: string;
+  title?: string;
+  eyebrow?: string;
+  intro?: string;
+}
+const {
+  exclude,
+  eyebrow = 'Θέματα',
+  title = 'Θέματα που <em>δουλεύουμε</em>',
+  intro = 'Αν αυτό που σας απασχολεί δεν είναι εδώ, πείτε μου στο τηλεφώνημα γνωριμίας.',
+} = Astro.props;
+const list = topicList.filter((t) => t.slug !== exclude);
+---
+<section class="section band" id="therapeia" aria-labelledby="topics-title">
+  <div class="wrap">
+    <SectionHead id="topics-title" eyebrow={eyebrow} title={title} intro={intro} />
+    <ul class="grid" data-stagger>
+      {list.map((t) => (
+        <li>
+          <a class="card" href={`/${t.slug}/`}>
+            <span class="icon"><Icon name={t.icon} /></span>
+            <h3>{t.title}</h3>
+            <p>{t.card}</p>
+            <span class="more">Διαβάστε περισσότερα <Icon name="arrow" /></span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .band { background: var(--brand-soft); }
+  .grid { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+  .grid li { min-width: 0; display: flex; }
+  .card {
+    position: relative;
+    flex: 1;
+    display: flex; flex-direction: column; gap: 0.7rem;
+    min-width: 0;
+    padding: 1.75rem 1.6rem 1.6rem;
+    border-radius: var(--radius-m);
+    background: var(--surface);
+    color: inherit;
+    text-decoration: none;
+    transition: translate .4s var(--ease), box-shadow .4s var(--ease);
+  }
+  .card:hover { translate: 0 -6px; box-shadow: 0 26px 46px -30px var(--shadow); }
+  .icon {
+    width: 3.1rem; height: 3.1rem; margin-bottom: 0.4rem;
+    border-radius: 50%;
+    display: grid; place-items: center;
+    background: var(--brand-soft); color: var(--brand);
+    transition: background-color .35s var(--ease), color .35s var(--ease), rotate .5s var(--ease);
+  }
+  .icon :global(svg) { width: 1.45rem; height: 1.45rem; }
+  .card:hover .icon { background: var(--apricot); color: var(--on-apricot); rotate: -10deg; }
+  h3 { font-size: 1.15rem; }
+  p { color: var(--ink-soft); font-size: 0.98rem; line-height: 1.55; flex: 1; }
+  .more { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.4rem; font-size: 0.9rem; font-weight: 800; color: var(--brand); }
+  .more :global(svg) { width: 1rem; height: 1rem; transition: translate .3s var(--ease); }
+  .card:hover .more :global(svg) { translate: 4px 0; }
+
+  @media (max-width: 960px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+</style>

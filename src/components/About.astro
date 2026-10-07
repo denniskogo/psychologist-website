@@ -1,0 +1,96 @@
+---
+import Icon from './Icon.astro';
+import { practice, credentials } from '../data/site';
+---
+<section class="section" id="proseggisi" aria-labelledby="about-title">
+  <div class="wrap about">
+    <div class="photo reveal">
+      <div class="frame" role="img" aria-label="Θέση για δεύτερη φωτογραφία, π.χ. από το γραφείο">
+        <!-- TODO: δεύτερη επαγγελματική φωτογραφία (γραφείο ή ολόσωμη) -->
+        <span class="blob b1"></span><span class="blob b2"></span>
+        <span class="initials" aria-hidden="true">{practice.initials}</span>
+      </div>
+      <div class="stat">
+        <span class="stat-n">ΑΠΘ</span>
+        <span class="stat-l">MSc Κλινική Ψυχική Υγεία, με Άριστα</span>
+      </div>
+    </div>
+
+    <div class="text reveal" style="--i:1">
+      <p class="eyebrow">Ποια είμαι</p>
+      <h2 id="about-title">Λίγα λόγια <em>για μένα</em></h2>
+      <p>Είμαι ψυχολόγος με μεταπτυχιακές σπουδές στην Κλινική Ψυχική Υγεία από το Τμήμα Ιατρικής του Αριστοτελείου Πανεπιστημίου Θεσσαλονίκης.</p>
+      {/* TODO: 2–3 προτάσεις από την ίδια: γιατί έγινε ψυχολόγος, πώς δουλεύει */}
+      <p>Στις συνεδρίες συζητάμε τι συμβαίνει και τι θα θέλατε να αλλάξει. Βάζουμε μαζί στόχους και κοιτάμε τακτικά πώς πάμε.</p>
+      <p class="quote"><Icon name="shield" />Όσα συζητάμε καλύπτονται από το επαγγελματικό απόρρητο.</p>
+      <ul class="creds">
+        {credentials.map((c) => (
+          <li>
+            <span class:list={['tick', { year: !!c.year }]}>{c.year ? c.year : <Icon name="check" />}</span>
+            <span>{c.text}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: clamp(2.5rem, 6vw, 5.5rem); align-items: center; }
+
+  .photo { position: relative; min-width: 0; padding-bottom: 2.5rem; }
+  .frame {
+    position: relative; overflow: hidden;
+    aspect-ratio: 4 / 5; max-width: 100%;
+    border-radius: var(--radius-l) var(--radius-l) var(--radius-l) 999px;
+    background: linear-gradient(200deg, var(--brand-soft), var(--mint));
+  }
+  .blob { position: absolute; border-radius: 50%; filter: blur(30px); }
+  .b1 { width: 70%; height: 60%; right: -15%; top: -10%; background: var(--apricot); opacity: .55; animation: float-blob 14s ease-in-out infinite alternate; }
+  .b2 { width: 60%; height: 50%; left: -10%; bottom: -5%; background: var(--brand); opacity: .55; animation: float-blob 18s ease-in-out infinite alternate-reverse; }
+  @keyframes float-blob { to { translate: -20% 25%; scale: 1.15; } }
+  .initials { position: absolute; inset: 0; display: grid; place-items: center; font: 300 clamp(3.5rem, 7vw, 5rem)/1 var(--font-display); color: var(--deep); opacity: .75; }
+
+  .stat {
+    position: absolute; right: -0.5rem; bottom: 0;
+    display: flex; flex-direction: column; gap: 0.15rem;
+    max-width: 14rem;
+    padding: 1.1rem 1.25rem;
+    border-radius: var(--radius-m);
+    background: var(--deep);
+    color: var(--on-deep);
+    box-shadow: 0 24px 40px -24px var(--shadow);
+  }
+  .stat-n { font: 400 2.4rem/1 var(--font-display); color: var(--apricot); }
+  .stat-l { font-size: 0.86rem; line-height: 1.4; color: var(--on-deep-soft); }
+
+  .text { display: flex; flex-direction: column; gap: 1.2rem; min-width: 0; max-width: 40rem; }
+  .text h2 { margin-bottom: 0.4rem; }
+  .text h2 em { color: var(--brand); }
+  .text > p { color: var(--ink-soft); }
+  .text > p.quote {
+    display: flex; gap: 0.7rem; align-items: flex-start;
+    padding: 0.95rem 1.15rem;
+    border-radius: var(--radius-s);
+    background: var(--brand-soft);
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .text > p.quote :global(svg) { width: 1.2rem; height: 1.2rem; flex: none; margin-top: 0.2rem; color: var(--brand); }
+
+  .creds { list-style: none; display: flex; flex-direction: column; gap: 0.65rem; margin-top: 0.4rem; }
+  .creds li { display: flex; align-items: center; gap: 0.9rem; font-size: 0.96rem; font-weight: 500; }
+  .tick {
+    flex: none; display: grid; place-items: center;
+    min-width: 3.6rem; height: 1.9rem; padding-inline: 0.55rem;
+    border-radius: 999px;
+    background: var(--brand-soft); color: var(--brand);
+    font-size: 0.8rem; font-weight: 800; font-variant-numeric: tabular-nums;
+  }
+  .tick :global(svg) { width: 1rem; height: 1rem; }
+
+  @media (max-width: 860px) {
+    .about { grid-template-columns: 1fr; }
+    .photo { width: min(100%, 22rem); }
+  }
+</style>

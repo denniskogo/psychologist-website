@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import PainPoints from '../components/PainPoints.astro';
+import About from '../components/About.astro';
+import Topics from '../components/Topics.astro';
+import Goals from '../components/Goals.astro';
+import Steps from '../components/Steps.astro';
+import Fees from '../components/Fees.astro';
+import Booking from '../components/Booking.astro';
+import Faq from '../components/Faq.astro';
+import Contact from '../components/Contact.astro';
+import CtaBand from '../components/CtaBand.astro';
+import MobileCta from '../components/MobileCta.astro';
+import { practice } from '../data/site';
+import { homeSchema } from '../lib/schema';
+
+const online = practice.offersOnline ? ' και online' : '';
+/*
+ * Σειρά ενοτήτων (ιστορία που οδηγεί στην κράτηση):
+ * 1. Hero: τι προσφέρω και ένα καθαρό κουμπί
+ * 2. Σας μοιάζει γνώριμο: ο επισκέπτης αναγνωρίζει τον εαυτό του
+ * 3. Ποια είμαι: γιατί να με εμπιστευτεί
+ * 4. Θέματα και στόχοι: με τι δουλεύουμε και τι μπορεί να αλλάξει
+ * 5. Βήματα, κόστος, κράτηση: πώς ξεκινάμε, χωρίς εκπλήξεις
+ * 6. Ερωτήσεις, επικοινωνία, τελικό κάλεσμα
+ */
+---
+<BaseLayout
+  schema={homeSchema(Astro.site ?? new URL('https://www.example.gr'))}
+  title={`${practice.name} | Ψυχολόγος ${practice.cityIn}${online}`}
+  description={`Ψυχολόγος ${practice.cityIn}${online}. Άγχος, κρίσεις πανικού, χαμηλή διάθεση, σχέσεις, αυτοεκτίμηση. Τηλεφωνική γνωριμία 15 λεπτών πριν το πρώτο ραντεβού.`}
+>
+  <Hero />
+  <PainPoints />
+  <About />
+  <Topics />
+  <Goals />
+  <Steps />
+  <Fees />
+  <Booking />
+  <Faq />
+  <Contact />
+  <CtaBand />
+  <MobileCta />
+</BaseLayout>

@@ -1,0 +1,56 @@
+---
+import Icon from './Icon.astro';
+import { practice } from '../data/site';
+---
+<section class="cta-section" aria-labelledby="cta-title">
+  <div class="wrap">
+    <div class="cta reveal">
+      <div class="glow" aria-hidden="true"></div>
+      <div class="cta-text">
+        <h2 id="cta-title">Ξεκινάμε με ένα τηλεφώνημα <em>15 λεπτών.</em></h2>
+        <p>Μου λέτε με λίγα λόγια τι σας απασχολεί, σας εξηγώ πώς δουλεύω και αποφασίζετε αν θέλετε να συνεχίσουμε.</p>
+      </div>
+      <div class="cta-actions">
+        <a class="btn btn-apricot" href="/#rantevou" data-pick="intro">Κλείστε ραντεβού <Icon name="arrow" /></a>
+        <p class="phone"><Icon name="phone" />ή καλέστε στο <span class="nums">{practice.phone}</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta-section { padding-block: clamp(1rem, 3vw, 2rem) clamp(3rem, 7vw, 5rem); }
+  .cta {
+    position: relative; isolation: isolate; overflow: hidden;
+    display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.6fr); gap: 2rem 3rem; align-items: end;
+    padding: clamp(2.25rem, 6vw, 4.5rem);
+    border-radius: var(--radius-l);
+    background: var(--deep);
+    color: var(--on-deep);
+  }
+  .glow { position: absolute; inset: 0; z-index: -1; }
+  .glow::before, .glow::after { content: ""; position: absolute; border-radius: 50%; }
+  .glow::before {
+    width: 40rem; height: 40rem; right: -14rem; bottom: -24rem;
+    background: radial-gradient(circle, color-mix(in srgb, var(--apricot) 40%, transparent) 0, transparent 65%);
+    animation: cta-a 14s ease-in-out infinite alternate;
+  }
+  .glow::after {
+    width: 36rem; height: 36rem; left: -12rem; top: -20rem;
+    background: radial-gradient(circle, color-mix(in srgb, var(--brand) 70%, transparent) 0, transparent 65%);
+    animation: cta-b 18s ease-in-out infinite alternate;
+  }
+  @keyframes cta-a { to { translate: -10rem -4rem; } }
+  @keyframes cta-b { to { translate: 8rem 6rem; } }
+
+  .cta-text { display: flex; flex-direction: column; gap: 1rem; min-width: 0; }
+  h2 { color: var(--on-deep); max-width: 19ch; }
+  h2 em { color: var(--apricot); }
+  .cta-text p { color: var(--on-deep-soft); max-width: 36rem; }
+  .cta-actions { display: flex; flex-direction: column; align-items: flex-start; gap: 1rem; }
+  .phone { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.92rem; color: var(--on-deep-soft); }
+  .phone :global(svg) { width: 1rem; height: 1rem; color: var(--mint); }
+  .phone span { color: var(--on-deep); font-weight: 700; }
+
+  @media (max-width: 860px) { .cta { grid-template-columns: 1fr; } }
+</style>

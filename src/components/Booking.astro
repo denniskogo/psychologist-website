@@ -1,0 +1,122 @@
+---
+import '../styles/booking.css';
+import Icon from './Icon.astro';
+import SectionHead from './SectionHead.astro';
+import { PUBLIC_BOOKING_MODE } from 'astro:env/client';
+import { services } from '../data/site';
+const demo = PUBLIC_BOOKING_MODE !== 'live';
+---
+<section class="section booking-band" id="rantevou" aria-labelledby="booking-title">
+  <div class="wrap">
+    <SectionHead
+      id="booking-title"
+      eyebrow="Ραντεβού"
+      title="Κλείστε <em>ραντεβού</em>"
+      intro="Διαλέξτε είδος συνεδρίας, ημέρα και ώρα. Εμφανίζονται μόνο οι ελεύθερες ώρες."
+    />
+    {demo && <p class="bk-demo">Λειτουργία επίδειξης: τίποτα δεν αποστέλλεται ούτε αποθηκεύεται</p>}
+
+    <form class="bk" id="booking" novalidate>
+      <div class="bk-steps">
+        <fieldset class="bk-step">
+          <legend><span class="bk-n">1</span>Είδος συνεδρίας</legend>
+          <div class="bk-svc-grid">
+            {services.map((s, i) => (
+              <label class="bk-svc">
+                <input type="radio" name="service" value={s.id} id={`svc-${s.id}`} checked={i === 0} />
+                <span class="bk-svc-body">
+                  <span class="bk-svc-name">{s.name}</span>
+                  <span class="bk-svc-price">{s.priceLabel}</span>
+                  <span class="bk-svc-meta">{s.meta}</span>
+                </span>
+              </label>
+            ))}
+          </div>
+          <p class="bk-hint">Αν είναι η πρώτη φορά, διαλέξτε τη γνωριμία.</p>
+        </fieldset>
+
+        <fieldset class="bk-step" id="day-step">
+          <legend><span class="bk-n">2</span>Ημέρα</legend>
+          <div class="bk-cal-head"><span id="cal-range"></span><span class="bk-cal-legend" id="cal-legend">Δευτέρα έως Παρασκευή</span></div>
+          <div class="bk-days-head" id="days-head" aria-hidden="true"><span>ΔΕΥ</span><span>ΤΡΙ</span><span>ΤΕΤ</span><span>ΠΕΜ</span><span>ΠΑΡ</span></div>
+          <div class="bk-days" id="days"></div>
+          <p class="bk-err" id="err-days" hidden></p>
+        </fieldset>
+
+        <fieldset class="bk-step">
+          <legend><span class="bk-n">3</span>Ώρα</legend>
+          <div id="slots" class="bk-slots"></div>
+          <p class="bk-err" id="err-slots" hidden></p>
+        </fieldset>
+
+        <fieldset class="bk-step">
+          <legend><span class="bk-n">4</span>Στοιχεία</legend>
+          <div class="bk-fields">
+            <div class="bk-field full">
+              <label for="f-name">Ονοματεπώνυμο</label>
+              <input id="f-name" name="name" type="text" autocomplete="name" aria-describedby="err-f-name" />
+              <p class="bk-err" id="err-f-name" hidden></p>
+            </div>
+            <div class="bk-field">
+              <label for="f-phone">Κινητό</label>
+              <input id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="69 1234 5678" aria-describedby="err-f-phone" />
+              <p class="bk-err" id="err-f-phone" hidden></p>
+            </div>
+            <div class="bk-field">
+              <label for="f-email">Email</label>
+              <input id="f-email" name="email" type="email" autocomplete="email" placeholder="onoma@email.gr" aria-describedby="err-f-email" />
+              <p class="bk-err" id="err-f-email" hidden></p>
+            </div>
+            <div class="bk-field full">
+              <label for="f-note">Σημείωση <span class="bk-opt">(προαιρετικό)</span></label>
+              <textarea id="f-note" name="note" aria-describedby="note-hint"></textarea>
+              <p class="bk-field-hint" id="note-hint">Κάτι πρακτικό, π.χ. αν προτιμάτε απογευματινές ώρες. Δεν χρειάζεται να περιγράψετε τι σας απασχολεί.</p>
+            </div>
+            <div class="bk-hp" aria-hidden="true">
+              <label for="f-website">Αφήστε αυτό το πεδίο κενό</label>
+              <input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+            </div>
+            <div class="bk-field full">
+              <label class="bk-consent" for="f-consent">
+                <input id="f-consent" name="consent" type="checkbox" aria-describedby="err-f-consent" />
+                <span>Συμφωνώ ρητά να χρησιμοποιηθούν τα στοιχεία μου μόνο για τον προγραμματισμό του ραντεβού, σύμφωνα με την <a href="/politiki-aporritou/" target="_blank">πολιτική απορρήτου</a>.</span>
+              </label>
+              <p class="bk-err" id="err-f-consent" hidden></p>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+
+      <aside class="bk-summary" aria-label="Σύνοψη ραντεβού">
+        <p class="bk-sum-label">Το ραντεβού σας</p>
+        <dl class="bk-sum">
+          <div><dt>Συνεδρία</dt><dd id="sum-svc"></dd></div>
+          <div><dt>Ημέρα</dt><dd id="sum-date"></dd></div>
+          <div><dt>Ώρα</dt><dd id="sum-time"></dd></div>
+          <div><dt>Τρόπος</dt><dd id="sum-mode"></dd></div>
+          <div><dt>Κόστος</dt><dd id="sum-price"></dd></div>
+        </dl>
+        <button class="btn btn-apricot btn-block" type="submit">Επιβεβαίωση <Icon name="arrow" /></button>
+        <p class="bk-form-error" id="form-error" role="alert" hidden></p>
+        <p class="bk-fine"><Icon name="shield" />Ακύρωση ή αλλαγή έως 24 ώρες πριν, χωρίς χρέωση.</p>
+      </aside>
+    </form>
+
+    <div class="bk-confirm" id="confirm" tabindex="-1" hidden>
+      <span class="bk-confirm-icon" aria-hidden="true"><Icon name="check" /></span>
+      <p class="eyebrow">Το ραντεβού καταχωρήθηκε</p>
+      <h3 id="confirm-title"></h3>
+      <p id="confirm-text"></p>
+      <div class="bk-confirm-actions">
+        <a class="btn btn-primary" id="gcal" href="https://calendar.google.com/" target="_blank" rel="noopener">Προσθήκη στο Google Calendar</a>
+        <button class="btn btn-ghost" id="again" type="button">Νέο ραντεβού</button>
+      </div>
+      {demo && <p class="bk-demo">Στη ζωντανή λειτουργία το ραντεβού γράφεται στο ημερολόγιο της ψυχολόγου και ο πελάτης παίρνει πρόσκληση με email</p>}
+    </div>
+  </div>
+</section>
+
+<script>
+  import { initBooking } from '../scripts/booking';
+  initBooking();
+</script>

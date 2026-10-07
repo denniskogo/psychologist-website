@@ -1,0 +1,56 @@
+---
+import Icon from './Icon.astro';
+import SectionHead from './SectionHead.astro';
+import { goals } from '../data/site';
+---
+<section class="section band" id="stoxoi" aria-labelledby="goals-title">
+  <div class="wrap">
+    <SectionHead
+      id="goals-title"
+      eyebrow="Τι μπορεί να αλλάξει"
+      title="Τι δουλεύουμε <em>στις συνεδρίες</em>"
+      intro="Οι στόχοι ορίζονται μαζί και διαφέρουν από άνθρωπο σε άνθρωπο. Μερικοί συνηθισμένοι:"
+    />
+    <ul class="grid" data-stagger>
+      {goals.map((g) => (
+        <li class="goal">
+          <span class="tick"><Icon name="check" /></span>
+          <div>
+            <h3>{g.title}</h3>
+            <p>{g.text}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .band { background: var(--apricot-soft); }
+  .grid { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+  .goal {
+    display: flex; gap: 1rem; align-items: flex-start;
+    min-width: 0;
+    padding: 1.5rem 1.4rem;
+    border-radius: var(--radius-m);
+    background: var(--surface);
+    transition: translate .4s var(--ease), box-shadow .4s var(--ease);
+  }
+  .goal:hover { translate: 0 -5px; box-shadow: 0 22px 40px -30px var(--shadow); }
+  .goal > div { min-width: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+  .tick {
+    flex: none;
+    width: 2.4rem; height: 2.4rem;
+    border-radius: 50%;
+    display: grid; place-items: center;
+    background: var(--deep); color: var(--apricot);
+    transition: scale .4s var(--ease), rotate .4s var(--ease);
+  }
+  .goal:hover .tick { scale: 1.1; rotate: -8deg; }
+  .tick :global(svg) { width: 1.15rem; height: 1.15rem; }
+  h3 { font-size: 1.05rem; }
+  p { color: var(--ink-soft); font-size: 0.95rem; line-height: 1.55; }
+
+  @media (max-width: 960px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+</style>

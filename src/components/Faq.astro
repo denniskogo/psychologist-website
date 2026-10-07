@@ -1,0 +1,75 @@
+---
+import Icon from './Icon.astro';
+import { faq, practice } from '../data/site';
+---
+<section class="section" id="erotiseis" aria-labelledby="faq-title">
+  <div class="wrap faq-layout">
+    <div class="side reveal">
+      <p class="eyebrow">Συχνές ερωτήσεις</p>
+      <h2 id="faq-title">Πριν από την <em>πρώτη συνεδρία</em></h2>
+      <p class="side-text">Δεν βρήκατε αυτό που ψάχνετε; Ρωτήστε με στην τηλεφωνική γνωριμία ή καλέστε με.</p>
+      <p class="side-phone"><Icon name="phone" /><span class="nums">{practice.phone}</span></p>
+    </div>
+    <div class="list" data-stagger>
+      {faq.map((item) => (
+        <details>
+          <summary>{item.q}<span class="plus" aria-hidden="true"></span></summary>
+          <p class="answer">{item.a}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq-layout { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: clamp(2rem, 6vw, 5rem); align-items: start; }
+  .side { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 6.5rem); display: flex; flex-direction: column; gap: 1rem; min-width: 0; }
+  h2 em { color: var(--brand); }
+  .side-text { color: var(--ink-soft); max-width: 24rem; }
+  .side-phone { display: inline-flex; align-items: center; gap: 0.6rem; font-weight: 800; font-size: 1.1rem; }
+  .side-phone :global(svg) { width: 1.2rem; height: 1.2rem; color: var(--brand); }
+
+  .list { display: flex; flex-direction: column; gap: 0.65rem; min-width: 0; }
+  details {
+    border-radius: var(--radius-m);
+    background: var(--surface);
+    padding: 0 1.4rem;
+    transition: box-shadow .3s var(--ease);
+  }
+  details[open] { box-shadow: 0 22px 40px -32px var(--shadow); }
+  summary {
+    list-style: none;
+    display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+    padding: 1.2rem 0;
+    font-weight: 700; font-size: 1.04rem; line-height: 1.4;
+    cursor: pointer;
+    transition: color .2s;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary:hover { color: var(--brand); }
+  .plus {
+    position: relative; flex: none;
+    width: 2.1rem; height: 2.1rem;
+    border-radius: 50%;
+    background: var(--brand-soft);
+    transition: rotate .4s var(--ease), background-color .3s;
+  }
+  .plus::before, .plus::after {
+    content: ""; position: absolute; left: 50%; top: 50%;
+    width: 12px; height: 2px; margin: -1px 0 0 -6px;
+    border-radius: 2px; background: var(--brand);
+    transition: background-color .3s;
+  }
+  .plus::after { rotate: 90deg; }
+  details[open] .plus { rotate: 135deg; background: var(--apricot); }
+  details[open] .plus::before, details[open] .plus::after { background: var(--on-apricot); }
+
+  details::details-content { block-size: 0; overflow: hidden; transition: block-size .45s var(--ease), content-visibility .45s allow-discrete; }
+  details[open]::details-content { block-size: auto; }
+  .answer { padding: 0 0 1.35rem; color: var(--ink-soft); max-width: 40rem; }
+
+  @media (max-width: 860px) {
+    .faq-layout { grid-template-columns: 1fr; }
+    .side { position: static; }
+  }
+</style>

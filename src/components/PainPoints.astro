@@ -1,0 +1,59 @@
+---
+import Icon from './Icon.astro';
+import { painPoints } from '../data/site';
+---
+<section class="section" id="gnwrimo" aria-labelledby="pain-title">
+  <div class="wrap layout">
+    <div class="side reveal">
+      <p class="eyebrow">Πότε να ζητήσετε βοήθεια</p>
+      <h2 id="pain-title">Δεν χρειάζεται <em>να υπάρχει κρίση</em></h2>
+      <p class="lead">Οι περισσότεροι κλείνουν ραντεβού επειδή κάτι τους βαραίνει εδώ και καιρό και δεν φεύγει. Μερικοί συνηθισμένοι λόγοι:</p>
+      <a class="more" href="#rantevou" data-pick="intro">Κλείστε ραντεβού <Icon name="arrow" /></a>
+    </div>
+
+    <ul class="list" data-stagger>
+      {painPoints.map((t) => (
+        <li><span class="dot" aria-hidden="true"></span><span>{t}</span></li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .layout { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(2.5rem, 6vw, 5rem); align-items: start; }
+  .side { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 6.5rem); display: flex; flex-direction: column; align-items: flex-start; gap: 1.1rem; min-width: 0; }
+  h2 em { color: var(--brand); }
+  .lead { color: var(--ink-soft); font-size: 1.08rem; max-width: 30rem; }
+  .more {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    margin-top: 0.4rem;
+    font-weight: 800; color: var(--brand); text-decoration: none;
+    border-bottom: 2px solid var(--apricot);
+    padding-bottom: 0.2rem;
+  }
+  .more :global(svg) { width: 1.1rem; height: 1.1rem; transition: translate .3s var(--ease); }
+  .more:hover :global(svg) { translate: 4px 0; }
+
+  .list { list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; }
+  .list li {
+    display: flex; gap: 0.8rem; align-items: flex-start;
+    min-width: 0;
+    padding: 1.1rem 1.2rem;
+    border-radius: var(--radius-s);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    font-weight: 500;
+    line-height: 1.45;
+    transition: border-color .3s, translate .3s var(--ease);
+  }
+  .list li:hover { border-color: var(--brand); translate: 0 -3px; }
+  .dot { flex: none; width: 0.55rem; height: 0.55rem; margin-top: 0.5rem; border-radius: 50%; background: var(--apricot); }
+
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .side { position: static; }
+  }
+  @media (max-width: 520px) {
+    .list { grid-template-columns: 1fr; }
+  }
+</style>

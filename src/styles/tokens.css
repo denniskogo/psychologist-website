@@ -1,0 +1,101 @@
+/*
+ * Design tokens: χρώματα, γραμματοσειρές, κλίμακα, κίνηση.
+ * Layout: βαθιά «λιμνοθάλασσα» σε στρογγυλεμένα πάνελ ανοίγουν και κλείνουν τη σελίδα (hero, τελικό CTA).
+ * Ενδιάμεσα, ανοιχτές λευκές ενότητες και μία μέντα ζώνη. Η αψίδα επαναλαμβάνεται ως «πόρτα».
+ */
+:root {
+  --bg: #F6F9F8;
+  --surface: #FFFFFF;
+  --ink: #0E2A2C;
+  --ink-soft: #4C6466;
+  --line: #DCE6E4;
+
+  --brand: #0A7C74;
+  --brand-hover: #086660;
+  --on-brand: #FFFFFF;
+  --brand-soft: #DDF2EE;
+
+  --deep: #073F3D;
+  --deep-2: #0B5A55;
+  --on-deep: #F2FBF9;
+  --on-deep-soft: #A8D3CC;
+  --deep-line: rgba(242, 251, 249, 0.16);
+
+  --apricot: #FF8A5C;
+  --apricot-hover: #FF7643;
+  --on-apricot: #2B1206;
+  --apricot-soft: #FFE7DC;
+  --mint: #7FE0CC;
+
+  --shadow: rgba(7, 63, 61, 0.16);
+  --error: #B93C25;
+
+  --font-display: "Noto Serif Display Variable", "Noto Serif Display", Georgia, "Times New Roman", serif;
+  --font-body: "Manrope Variable", "Manrope", "Segoe UI", system-ui, -apple-system, sans-serif;
+
+  --step--1: 0.875rem;
+  --step-0: 1.0625rem;
+  --step-1: 1.25rem;
+  --step-2: clamp(1.95rem, 3.6vw, 2.9rem);
+  --step-3: clamp(2.7rem, 6.4vw, 5rem);
+
+  --radius-s: 14px;
+  --radius-m: 22px;
+  --radius-l: 32px;
+  --gutter: clamp(16px, 4vw, 40px);
+  --ease: cubic-bezier(.2, .75, .25, 1);
+
+  interpolate-size: allow-keywords;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0A1514;
+    --surface: #112221;
+    --ink: #E6F2F0;
+    --ink-soft: #9DB7B3;
+    --line: #21393A;
+    --brand: #43C9B6;
+    --brand-hover: #63D7C6;
+    --on-brand: #062321;
+    --brand-soft: #123532;
+    --deep: #0C2F2D;
+    --deep-2: #114240;
+    --on-deep: #F2FBF9;
+    --on-deep-soft: #A8D3CC;
+    --deep-line: rgba(242, 251, 249, 0.14);
+    --apricot: #FF956B;
+    --apricot-hover: #FFA884;
+    --on-apricot: #2B1206;
+    --apricot-soft: #3A2219;
+    --mint: #7FE0CC;
+    --shadow: rgba(0, 0, 0, 0.45);
+    --error: #FF9C86;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #0A1514;
+  --surface: #112221;
+  --ink: #E6F2F0;
+  --ink-soft: #9DB7B3;
+  --line: #21393A;
+  --brand: #43C9B6;
+  --brand-hover: #63D7C6;
+  --on-brand: #062321;
+  --brand-soft: #123532;
+  --deep: #0C2F2D;
+  --deep-2: #114240;
+  --on-deep: #F2FBF9;
+  --on-deep-soft: #A8D3CC;
+  --deep-line: rgba(242, 251, 249, 0.14);
+  --apricot: #FF956B;
+  --apricot-hover: #FFA884;
+  --on-apricot: #2B1206;
+  --apricot-soft: #3A2219;
+  --mint: #7FE0CC;
+  --shadow: rgba(0, 0, 0, 0.45);
+  --error: #FF9C86;
+  color-scheme: dark;
+}

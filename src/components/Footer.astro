@@ -1,0 +1,42 @@
+---
+import { practice, nav } from '../data/site';
+const year = new Date().getFullYear();
+---
+<footer class="footer">
+  <div class="wrap inner">
+    <div class="urgent">
+      <p><strong>Για επείγοντα</strong> η σελίδα και το τηλέφωνο του γραφείου δεν είναι κατάλληλα. Αν εσείς ή κάποιος κοντά σας κινδυνεύει, καλέστε το <span class="nums">112</span> ή τη Γραμμή Παρέμβασης για την Αυτοκτονία <span class="nums">1018</span>, που λειτουργεί όλο το 24ωρο.</p>
+    </div>
+    <div class="cols">
+      <div class="brand">
+        <p class="name">{practice.name}</p>
+        <p class="role">{practice.role}</p>
+      </div>
+      <nav class="links" aria-label="Σύνδεσμοι υποσέλιδου">
+        {nav.map((item) => <a href={item.href}>{item.label}</a>)}
+        <a href="/#rantevou">Ραντεβού</a>
+      </nav>
+    </div>
+    <div class="meta">
+      <span>© {year} {practice.name}, Ψυχολόγος</span>
+      <a href="/politiki-aporritou/">Πολιτική απορρήτου</a>
+      <a href="/oroi-synedrion/">Όροι συνεδριών</a>
+      {practice.draft && <span>Ενδεικτικά στοιχεία</span>}
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer { padding-block: 0 2.5rem; }
+  .inner { display: flex; flex-direction: column; gap: 2rem; }
+  .urgent { padding: 1.1rem 1.35rem; border-radius: var(--radius-m); background: var(--apricot-soft); font-size: 0.95rem; line-height: 1.6; }
+  .urgent strong { font-weight: 800; }
+  .cols { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1.5rem 3rem; padding-top: 1rem; }
+  .name { font: 400 1.4rem/1.2 var(--font-display); }
+  .role { font-size: 0.86rem; color: var(--ink-soft); }
+  .links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; font-weight: 600; font-size: 0.92rem; }
+  .links a { color: var(--ink-soft); text-decoration: none; transition: color .2s; }
+  .links a:hover { color: var(--brand); }
+  .meta { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--line); font-size: 0.82rem; color: var(--ink-soft); }
+  .meta a { color: inherit; }
+</style>

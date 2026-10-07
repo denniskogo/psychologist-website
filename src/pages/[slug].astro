@@ -1,0 +1,213 @@
+---
+/**
+ * Μία σελίδα για κάθε θέμα (π.χ. /agxos-krises-panikou/).
+ * Στοχεύει αναζητήσεις όπως «ψυχολόγος για άγχος Αθήνα». Περιεχόμενο: src/data/topics.ts
+ */
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import Topics from '../components/Topics.astro';
+import CtaBand from '../components/CtaBand.astro';
+import portrait from '../assets/portrait.jpg';
+import { topicList, type Topic } from '../data/topics';
+import { practice } from '../data/site';
+import { breadcrumbSchema, faqSchema, personSchema } from '../lib/schema';
+
+export function getStaticPaths() {
+  return topicList.map((topic) => ({ params: { slug: topic.slug }, props: { topic } }));
+}
+
+interface Props { topic: Topic }
+const { topic } = Astro.props;
+const site = Astro.site ?? new URL('https://www.example.gr');
+const path = `/${topic.slug}/`;
+const schema = [
+  {
+    '@type': 'MedicalWebPage',
+    name: topic.title,
+    description: topic.metaDescription,
+    url: new URL(path, site).href,
+    inLanguage: 'el',
+    author: { '@id': new URL('/#person', site).href },
+  },
+  personSchema(site),
+  breadcrumbSchema(site, [
+    { name: 'Αρχική', path: '/' },
+    { name: topic.title, path },
+  ]),
+  faqSchema(topic.faq),
+];
+---
+<BaseLayout
+  title={`${topic.title} | Ψυχολόγος ${practice.cityIn} | ${practice.name}`}
+  description={topic.metaDescription}
+  schema={schema}
+>
+  <section class="head-section">
+    <div class="wrap">
+      <div class="head">
+        <div class="glow" aria-hidden="true"></div>
+        <nav class="crumbs" aria-label="Διαδρομή">
+          <a href="/">Αρχική</a><span aria-hidden="true">/</span><a href="/#therapeia">Θέματα</a>
+        </nav>
+        <div class="head-grid">
+          <div class="head-text">
+            <h1>{topic.title}</h1>
+            <p class="lead">{topic.lead}</p>
+            <div class="actions">
+              <a class="btn btn-apricot" href="/#rantevou">Κλείστε τηλεφωνική γνωριμία <Icon name="arrow" /></a>
+              <span class="phone"><Icon name="phone" /><span class="nums">{practice.phone}</span></span>
+            </div>
+          </div>
+          <span class="big-icon" aria-hidden="true"><Icon name={topic.icon} /></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap body">
+    <article class="article">
+      <section class="block reveal" aria-labelledby="signs">
+        <h2 id="signs">{topic.signsTitle}</h2>
+        <ul class="signs">
+          {topic.signs.map((s) => <li><Icon name="check" /><span>{s}</span></li>)}
+        </ul>
+        {topic.note && <p class="note">{topic.note}</p>}
+      </section>
+
+      {topic.urgent && (
+        <aside class="urgent reveal" role="note">
+          <strong>Αν χρειάζεστε βοήθεια τώρα</strong>
+          <p>{topic.urgent}</p>
+        </aside>
+      )}
+
+      <section class="block reveal" aria-labelledby="how">
+        <h2 id="how">Πώς δουλεύουμε μαζί</h2>
+        {topic.how.map((p) => <p class="para">{p}</p>)}
+        <p class="para">Ξεκινάμε πάντα με μια τηλεφωνική γνωριμία 15 λεπτών, για να δούμε αν μπορώ να σας βοηθήσω και αν ταιριάζουμε.</p>
+      </section>
+
+      <section class="block reveal" aria-labelledby="faq">
+        <h2 id="faq">Συχνές ερωτήσεις</h2>
+        <div class="faq">
+          {topic.faq.map((f) => (
+            <details>
+              <summary>{f.q}<span class="plus" aria-hidden="true"></span></summary>
+              <p class="answer">{f.a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+    </article>
+
+    <aside class="side" aria-label="Κλείστε ραντεβού">
+      <div class="card reveal">
+        <Image src={portrait} alt="" width={160} height={200} class="avatar" />
+        <p class="name">{practice.name}</p>
+        <p class="role">{practice.role}</p>
+        <a class="btn btn-primary btn-block" href="/#rantevou">Κλείστε ραντεβού <Icon name="arrow" /></a>
+        <p class="small">Ή καλέστε στο <strong class="nums">{practice.phone}</strong></p>
+      </div>
+    </aside>
+  </div>
+
+  <Topics exclude={topic.slug} eyebrow="Άλλα θέματα" title="Δείτε και <em>άλλα θέματα</em>" intro="" />
+  <CtaBand />
+</BaseLayout>
+
+<style>
+  .head-section { padding-top: clamp(0.5rem, 2vw, 1.25rem); }
+  .head {
+    position: relative; isolation: isolate; overflow: hidden;
+    display: flex; flex-direction: column; gap: 1.75rem;
+    padding: clamp(1.75rem, 5vw, 3.75rem);
+    border-radius: var(--radius-l);
+    background: var(--deep);
+    color: var(--on-deep);
+  }
+  .glow { position: absolute; inset: 0; z-index: -1; }
+  .glow::before {
+    content: ""; position: absolute; width: 38rem; height: 38rem; right: -12rem; top: -20rem; border-radius: 50%;
+    background: radial-gradient(circle, color-mix(in srgb, var(--brand) 75%, transparent) 0, transparent 65%);
+  }
+  .glow::after {
+    content: ""; position: absolute; width: 30rem; height: 30rem; left: -10rem; bottom: -20rem; border-radius: 50%;
+    background: radial-gradient(circle, color-mix(in srgb, var(--apricot) 30%, transparent) 0, transparent 65%);
+  }
+  .crumbs { display: flex; flex-wrap: wrap; gap: 0.5rem; font-size: 0.86rem; font-weight: 600; color: var(--on-deep-soft); }
+  .crumbs a { color: inherit; text-decoration: none; }
+  .crumbs a:hover { color: var(--on-deep); }
+  .head-grid { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2rem; align-items: center; }
+  .head-text { display: flex; flex-direction: column; gap: 1.25rem; min-width: 0; animation: rise .8s var(--ease) both; }
+  h1 { color: var(--on-deep); font-size: clamp(2.3rem, 5vw, 3.8rem); max-width: 16ch; }
+  .lead { color: var(--on-deep-soft); font-size: 1.12rem; max-width: 40rem; }
+  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.25rem; }
+  .phone { display: inline-flex; align-items: center; gap: 0.45rem; font-weight: 700; color: var(--on-deep); }
+  .phone :global(svg) { width: 1.05rem; height: 1.05rem; color: var(--mint); }
+  .big-icon {
+    width: clamp(7rem, 14vw, 11rem); aspect-ratio: 1; max-width: 100%;
+    border-radius: 50%;
+    display: grid; place-items: center;
+    background: color-mix(in srgb, var(--on-deep) 8%, transparent);
+    box-shadow: inset 0 0 0 1px var(--deep-line);
+    color: var(--apricot);
+    animation: float 6s ease-in-out infinite;
+  }
+  .big-icon :global(svg) { width: 45%; height: 45%; stroke-width: 1.4; }
+
+  .body {
+    display: grid; grid-template-columns: minmax(0, 1fr) 18rem; gap: clamp(2rem, 5vw, 4.5rem); align-items: start;
+    padding-block: clamp(3rem, 7vw, 5rem);
+  }
+  .article { display: flex; flex-direction: column; gap: 2.75rem; min-width: 0; max-width: 44rem; }
+  .block { display: flex; flex-direction: column; gap: 1rem; }
+  .block h2 { font-size: clamp(1.6rem, 3vw, 2.1rem); }
+  .signs { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+  .signs li { display: flex; gap: 0.75rem; align-items: flex-start; padding: 0.85rem 1rem; border-radius: var(--radius-s); background: var(--surface); }
+  .signs :global(svg) { width: 1.15rem; height: 1.15rem; margin-top: 0.25rem; flex: none; color: var(--brand); }
+  .note { padding: 1rem 1.2rem; border-radius: var(--radius-s); background: var(--brand-soft); font-size: 0.96rem; }
+  .urgent { padding: 1.2rem 1.35rem; border-radius: var(--radius-m); background: var(--apricot-soft); display: flex; flex-direction: column; gap: 0.4rem; }
+  .urgent strong { font-weight: 800; }
+  .para { color: var(--ink-soft); }
+
+  .faq { display: flex; flex-direction: column; gap: 0.6rem; }
+  details { border-radius: var(--radius-m); background: var(--surface); padding: 0 1.25rem; }
+  summary {
+    list-style: none; cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+    padding: 1.1rem 0; font-weight: 700; line-height: 1.4;
+  }
+  summary::-webkit-details-marker { display: none; }
+  .plus { position: relative; flex: none; width: 2rem; height: 2rem; border-radius: 50%; background: var(--brand-soft); transition: rotate .4s var(--ease), background-color .3s; }
+  .plus::before, .plus::after { content: ""; position: absolute; left: 50%; top: 50%; width: 12px; height: 2px; margin: -1px 0 0 -6px; border-radius: 2px; background: var(--brand); }
+  .plus::after { rotate: 90deg; }
+  details[open] .plus { rotate: 135deg; background: var(--apricot); }
+  details[open] .plus::before, details[open] .plus::after { background: var(--on-apricot); }
+  details::details-content { block-size: 0; overflow: hidden; transition: block-size .45s var(--ease), content-visibility .45s allow-discrete; }
+  details[open]::details-content { block-size: auto; }
+  .answer { padding: 0 0 1.25rem; color: var(--ink-soft); }
+
+  .side { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 6rem); min-width: 0; }
+  .card {
+    display: flex; flex-direction: column; align-items: center; gap: 0.6rem; text-align: center;
+    padding: 1.75rem 1.4rem;
+    border-radius: var(--radius-l);
+    background: var(--surface);
+    box-shadow: 0 30px 60px -44px var(--shadow);
+  }
+  .card :global(.avatar) { width: 6.5rem; height: 6.5rem; border-radius: 50%; object-fit: cover; object-position: 50% 30%; margin-bottom: 0.4rem; }
+  .name { font: 400 1.35rem/1.2 var(--font-display); }
+  .role { font-size: 0.84rem; color: var(--ink-soft); margin-bottom: 0.6rem; }
+  .small { font-size: 0.86rem; color: var(--ink-soft); }
+
+  @media (max-width: 900px) {
+    .body { grid-template-columns: 1fr; }
+    .side { position: static; }
+    .card { max-width: 24rem; }
+  }
+  @media (max-width: 560px) {
+    .head-grid { grid-template-columns: 1fr; }
+    .big-icon { display: none; }
+  }
+</style>

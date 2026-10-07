@@ -1,0 +1,28 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+  intro?: string;
+  id?: string;
+}
+const { eyebrow, title, intro, id } = Astro.props;
+---
+<div class:list={['head', 'reveal', { 'has-intro': !!intro }]}>
+  <div class="title">
+    <p class="eyebrow">{eyebrow}</p>
+    <h2 id={id} set:html={title} />
+  </div>
+  {intro && <p class="intro">{intro}</p>}
+</div>
+
+<style>
+  .head { display: grid; gap: 1.25rem 3rem; margin-bottom: clamp(2.25rem, 5vw, 3.5rem); }
+  .has-intro { grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); align-items: end; }
+  .title { display: flex; flex-direction: column; gap: 1rem; min-width: 0; }
+  h2 { max-width: 18ch; }
+  h2 :global(em) { color: var(--brand); }
+  .intro { color: var(--ink-soft); font-size: 1.08rem; max-width: 34rem; }
+  @media (max-width: 820px) {
+    .has-intro { grid-template-columns: 1fr; }
+  }
+</style>

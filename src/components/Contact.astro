@@ -1,0 +1,90 @@
+---
+import Icon from './Icon.astro';
+import SectionHead from './SectionHead.astro';
+import { practice } from '../data/site';
+---
+<section class="section band" id="epikoinonia" aria-labelledby="contact-title">
+  <div class="wrap">
+    <SectionHead id="contact-title" eyebrow="Επικοινωνία" title="Στοιχεία <em>επικοινωνίας</em>" />
+    <div class="grid" data-stagger>
+      <div class="item">
+        <span class="icon"><Icon name="phone" /></span>
+        <p class="label">Τηλέφωνο</p>
+        <p class="value"><span id="c-phone" class="nums">{practice.phone}</span><button class="copy" type="button" data-copy="c-phone">Αντιγραφή</button></p>
+        <p class="note">{practice.hours}. Αν είμαι σε συνεδρία, σας καλώ πίσω την ίδια μέρα.</p>
+      </div>
+      <div class="item">
+        <span class="icon"><Icon name="mail" /></span>
+        <p class="label">Email</p>
+        <p class="value"><span id="c-email">{practice.email}</span><button class="copy" type="button" data-copy="c-email">Αντιγραφή</button></p>
+        <p class="note">Απαντώ μέσα σε μία εργάσιμη. Μη στέλνετε προσωπικές πληροφορίες υγείας με email.</p>
+      </div>
+      <div class="item">
+        <span class="icon"><Icon name="pin" /></span>
+        <p class="label">Γραφείο</p>
+        <p class="value">{practice.address}</p>
+        <a class="link" href={practice.mapsUrl} target="_blank" rel="noopener">Άνοιγμα στους Χάρτες Google <Icon name="arrow" /></a>
+        <p class="note">Μόνο κατόπιν ραντεβού.{practice.offersOnline && ' Online συνεδρίες από όπου κι αν βρίσκεστε.'}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .band { background: var(--surface); }
+  .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+  .item {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 0.5rem;
+    min-width: 0;
+    padding: 1.75rem 1.6rem;
+    border-radius: var(--radius-m);
+    background: var(--bg);
+    transition: translate .4s var(--ease);
+  }
+  .item:hover { translate: 0 -4px; }
+  .icon { width: 3rem; height: 3rem; margin-bottom: 0.5rem; border-radius: 50%; display: grid; place-items: center; background: var(--deep); color: var(--apricot); }
+  .icon :global(svg) { width: 1.3rem; height: 1.3rem; }
+  .label { font-size: 0.74rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-soft); }
+  .value { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.75rem; font-weight: 700; font-size: 1.15rem; line-height: 1.35; overflow-wrap: anywhere; }
+  .copy {
+    padding: 0.35rem 0.8rem;
+    border: 1.5px solid var(--line);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--ink-soft);
+    font: 700 0.76rem/1.2 var(--font-body);
+    cursor: pointer;
+    transition: border-color .2s, color .2s;
+  }
+  .copy:hover { border-color: var(--brand); color: var(--brand); }
+  .link { display: inline-flex; align-items: center; gap: 0.4rem; font-weight: 700; font-size: 0.92rem; color: var(--brand); text-decoration: none; }
+  .link :global(svg) { width: 1rem; height: 1rem; transition: translate .3s var(--ease); }
+  .link:hover :global(svg) { translate: 3px 0; }
+  .note { font-size: 0.9rem; line-height: 1.5; color: var(--ink-soft); }
+
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const el = document.getElementById(btn.dataset.copy ?? '');
+      if (!el) return;
+      const reset = () => setTimeout(() => { btn.textContent = 'Αντιγραφή'; }, 1600);
+      const fallback = () => {
+        const r = document.createRange();
+        r.selectNodeContents(el);
+        const s = window.getSelection();
+        s?.removeAllRanges();
+        s?.addRange(r);
+        btn.textContent = 'Επιλέχθηκε';
+        reset();
+      };
+      try {
+        navigator.clipboard.writeText(el.textContent?.trim() ?? '').then(() => { btn.textContent = 'Αντιγράφηκε'; reset(); }, fallback);
+      } catch {
+        fallback();
+      }
+    });
+  });
+</script>

@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  updated: string;
+}
+const { title, description, updated } = Astro.props;
+---
+<BaseLayout title={title} description={description}>
+  <div class="wrap legal">
+    <nav class="crumbs" aria-label="Διαδρομή"><a href="/">Αρχική</a><span aria-hidden="true">/</span><span>{title.split(' | ')[0]}</span></nav>
+    <h1>{title.split(' | ')[0]}</h1>
+    <p class="updated">Τελευταία ενημέρωση: {updated}</p>
+    <div class="prose">
+      <slot />
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .legal { max-width: 52rem; padding-block: clamp(2.5rem, 6vw, 4.5rem) clamp(4rem, 8vw, 6rem); display: flex; flex-direction: column; gap: 1rem; }
+  .crumbs { display: flex; gap: 0.5rem; font-size: 0.86rem; font-weight: 600; color: var(--ink-soft); }
+  .crumbs a { color: inherit; text-decoration: none; }
+  .crumbs a:hover { color: var(--brand); }
+  h1 { font-size: clamp(2.2rem, 5vw, 3.4rem); }
+  .updated { color: var(--ink-soft); font-size: 0.9rem; }
+  .prose { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 1rem; max-width: 46rem; }
+  .prose :global(h2) { font-size: clamp(1.4rem, 2.6vw, 1.8rem); margin-top: 1.5rem; }
+  .prose :global(p), .prose :global(li) { color: var(--ink-soft); }
+  .prose :global(strong) { color: var(--ink); }
+  .prose :global(ul) { padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.4rem; }
+  .prose :global(a) { color: var(--brand); font-weight: 600; }
+  .prose :global(.box) { padding: 1rem 1.2rem; border-radius: var(--radius-s); background: var(--brand-soft); }
+</style>

@@ -1,0 +1,148 @@
+---
+import { practice, nav } from '../data/site';
+---
+<header class="topbar" id="topbar">
+  <div class="wrap bar">
+    <a class="brand" href="/" aria-label={`${practice.name}, αρχική σελίδα`}>
+      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M5 30V15.5a11 11 0 0 1 22 0V30Z" class="mark-arch" />
+        <circle cx="16" cy="17" r="4.5" class="mark-dot" />
+      </svg>
+      <span class="brand-text">
+        <span class="brand-name">{practice.name}</span>
+        <span class="brand-role">{practice.role}</span>
+      </span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Κύριο μενού">
+      {nav.map((item) => <a href={item.href}>{item.label}</a>)}
+    </nav>
+
+    <a class="btn btn-primary btn-sm cta" href="/#rantevou">Ραντεβού</a>
+    <button class="menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="nav" aria-label="Μενού">
+      <span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<style>
+  .topbar {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 40;
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    transition: box-shadow .3s, background-color .3s;
+  }
+  .topbar.scrolled {
+    background: color-mix(in srgb, var(--surface) 92%, transparent);
+    box-shadow: 0 12px 30px -24px var(--shadow);
+  }
+  .bar { display: flex; align-items: center; gap: 2rem; min-height: 4.5rem; }
+
+  .brand { display: flex; align-items: center; gap: 0.7rem; margin-right: auto; text-decoration: none; min-width: 0; }
+  .mark { width: 2rem; height: 2rem; flex: none; }
+  .mark-arch { fill: var(--brand); }
+  .mark-dot { fill: var(--apricot); transform-origin: 16px 17px; animation: dot-breathe 10s ease-in-out infinite; }
+  .brand-text { display: flex; flex-direction: column; min-width: 0; }
+  .brand-name { font: 500 1.2rem/1.1 var(--font-display); letter-spacing: -0.01em; }
+  .brand-role { font-size: 0.76rem; line-height: 1.35; color: var(--ink-soft); }
+
+  .nav { display: flex; gap: 1.6rem; font-weight: 600; font-size: 0.95rem; }
+  .nav a {
+    position: relative;
+    padding-block: 0.35rem;
+    color: var(--ink-soft);
+    text-decoration: none;
+    transition: color .2s;
+  }
+  .nav a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--apricot);
+    scale: 0 1;
+    transform-origin: 0 50%;
+    transition: scale .35s var(--ease);
+  }
+  .nav a:hover { color: var(--ink); }
+  .nav a:hover::after { scale: 1 1; }
+
+  .menu-btn {
+    display: none;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    border: 1.5px solid var(--line);
+    background: var(--surface);
+    color: var(--ink);
+    cursor: pointer;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+  .menu-btn span { display: block; width: 1rem; height: 1.5px; background: currentColor; transition: transform .25s var(--ease); }
+  .menu-btn[aria-expanded="true"] span:first-child { transform: translateY(3.25px) rotate(45deg); }
+  .menu-btn[aria-expanded="true"] span:last-child { transform: translateY(-3.25px) rotate(-45deg); }
+
+  @keyframes dot-breathe { 0%, 100% { scale: .75; } 40% { scale: 1.1; } }
+
+  @media (max-width: 960px) {
+    .bar { gap: 0.6rem; }
+    .menu-btn { display: inline-flex; }
+    .nav {
+      display: none;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 100%;
+      flex-direction: column;
+      gap: 0;
+      padding: 0.25rem var(--gutter) 1.25rem;
+      background: var(--surface);
+      box-shadow: 0 24px 30px -24px var(--shadow);
+    }
+    .nav.open { display: flex; animation: drop .3s var(--ease); }
+    .nav a { padding: 0.95rem 0; border-bottom: 1px solid var(--line); color: var(--ink); font-size: 1.05rem; }
+    .nav a::after { display: none; }
+  }
+  @media (max-width: 440px) {
+    .brand-role { display: none; }
+    .cta { padding-inline: 0.95rem; }
+  }
+  @keyframes drop { from { opacity: 0; translate: 0 -8px; } }
+</style>
+
+<script>
+  const topbar = document.getElementById('topbar');
+  const menuBtn = document.getElementById('menu-btn');
+  const nav = document.getElementById('nav');
+
+  if (topbar) {
+    let ticking = false;
+    const update = () => {
+      topbar.classList.toggle('scrolled', window.scrollY > 8);
+      ticking = false;
+    };
+    window.addEventListener('scroll', () => {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    update();
+  }
+
+  if (menuBtn && nav) {
+    const close = () => { nav.classList.remove('open'); menuBtn.setAttribute('aria-expanded', 'false'); };
+    menuBtn.addEventListener('click', () => {
+      const open = nav.classList.toggle('open');
+      menuBtn.setAttribute('aria-expanded', String(open));
+    });
+    nav.addEventListener('click', (e) => { if ((e.target as HTMLElement).closest('a')) close(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+  }
+</script>

@@ -1,0 +1,66 @@
+---
+import Icon from './Icon.astro';
+import SectionHead from './SectionHead.astro';
+import { plans } from '../data/site';
+---
+<section class="section band" id="kostos" aria-labelledby="fees-title">
+  <div class="wrap">
+    <SectionHead
+      id="fees-title"
+      eyebrow="Συνεδρίες και κόστος"
+      title="Τιμές <em>συνεδριών</em>"
+      intro="Για κάθε συνεδρία εκδίδεται απόδειξη παροχής υπηρεσιών. Ακύρωση ή αλλαγή έως 24 ώρες πριν, χωρίς χρέωση."
+    />
+    <ul class="plans" data-stagger>
+      {plans.map((p) => (
+        <li class:list={['plan', { featured: p.featured }]}>
+          {p.tag && <span class="tag">{p.tag}</span>}
+          <h3>{p.title}</h3>
+          <p class="meta">{p.meta}</p>
+          <p class="price">{p.price}</p>
+          <ul class="points">
+            {p.points.map((pt) => (<li><Icon name="check" />{pt}</li>))}
+          </ul>
+          <a class:list={['btn', 'btn-block', p.featured ? 'btn-apricot' : 'btn-ghost']} href="#rantevou" data-pick={p.service}>
+            {p.cta} <Icon name="arrow" />
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .band { background: var(--surface); }
+  .plans { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; align-items: stretch; }
+  .plan {
+    position: relative;
+    display: flex; flex-direction: column; gap: 0.5rem;
+    min-width: 0;
+    padding: 2rem 1.75rem 1.75rem;
+    border-radius: var(--radius-m);
+    background: var(--bg);
+    border: 1px solid var(--line);
+    transition: translate .4s var(--ease), box-shadow .4s var(--ease);
+  }
+  .plan:hover { translate: 0 -6px; box-shadow: 0 26px 46px -30px var(--shadow); }
+  .featured { background: var(--deep); color: var(--on-deep); border-color: var(--deep); }
+  .tag {
+    position: absolute; top: 1.25rem; right: 1.25rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+    background: var(--apricot); color: var(--on-apricot);
+    font-size: 0.75rem; font-weight: 800;
+  }
+  h3 { font-size: 1.15rem; }
+  .meta { font-size: 0.9rem; color: var(--ink-soft); }
+  .featured .meta { color: var(--on-deep-soft); }
+  .price { margin: 0.75rem 0 0.5rem; font: 400 clamp(2.4rem, 4vw, 3rem)/1 var(--font-display); font-variant-numeric: tabular-nums; }
+  .featured .price { color: var(--apricot); }
+  .points { list-style: none; display: flex; flex-direction: column; gap: 0.55rem; margin-bottom: 1.5rem; flex: 1; }
+  .points li { display: flex; gap: 0.55rem; align-items: flex-start; font-size: 0.95rem; }
+  .points :global(svg) { width: 1.05rem; height: 1.05rem; margin-top: 0.22rem; flex: none; color: var(--brand); }
+  .featured .points :global(svg) { color: var(--mint); }
+
+  @media (max-width: 900px) { .plans { grid-template-columns: 1fr; max-width: 30rem; } }
+</style>
